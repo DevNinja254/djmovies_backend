@@ -30,7 +30,7 @@ class VideoDetailsAPIView(viewsets.ModelViewSet):
     filterset_class = VideoUploadFilter
     pagination_class = CustomPagination
     ordering_fields = ['title', 'price', 'date_uploaded', 'popular']
-    @method_decorator(cache_page(60 * 60, key_prefix="videosupload"))
+    @method_decorator(cache_page(15 * 60, key_prefix="videosupload"))
     @method_decorator(vary_on_cookie)
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
@@ -44,10 +44,10 @@ class VideoDetailsAPIView(viewsets.ModelViewSet):
 
     # permission_classes = [AuthorizedAccess]
 
-class GenreAPIView(viewsets.ModelViewSet):
-    serializer_class = GenreSerializer
-    queryset = Genre.objects.all()
-    @method_decorator(cache_page(60 * 60, key_prefix="genre"))
+class DjAPIView(viewsets.ModelViewSet):
+    serializer_class = DjSerializer
+    queryset = Dj.objects.all()
+    @method_decorator(cache_page(60 * 60, key_prefix="dj"))
     @method_decorator(vary_on_cookie)
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
@@ -59,6 +59,21 @@ class GenreAPIView(viewsets.ModelViewSet):
        
         return super().get_queryset()
     # permission_classes = [AuthorizedAccess]
+class GenreAPIView(viewsets.ModelViewSet):
+    serializer_class = GenreSerializer
+    queryset = Genre.objects.all()
+    permission_classes = [AuthorizedAccess]
+    @method_decorator(cache_page(60 * 60, key_prefix="genre"))
+    @method_decorator(vary_on_cookie)
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+    @method_decorator(cache_page(60 * 5))
+    @method_decorator(vary_on_cookie)
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
+    def get_queryset(self):
+       
+        return super().get_queryset()
 class GenreTotalAPIView(viewsets.ModelViewSet):
     serializer_class = GenreTotalSerializer
     queryset = Genre.objects.all()
@@ -86,6 +101,7 @@ class PurchasedAPIView(viewsets.ModelViewSet):
     # permission_classes = [AuthorizedAccess]
     filter_backends = [filters.OrderingFilter]
     ordering_fields = ['purchase_time']
+
 class DepositHistoryAPIView(viewsets.ModelViewSet):
     # permission_classes = [AuthorizedAccess]
     serializer_class = DepositHistorySerializer
@@ -164,17 +180,27 @@ class UserLoginAPIView(GenericAPIView):
         return Response(data, status=status.HTTP_200_OK)
 logger = logging.getLogger(__name__)
 class UserLogoutAPIView(GenericAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = []  # Or your desired permission classes
     def post(self, request):
-        logger.debug(request.data)
-        try: 
-            refresh_token = request.data
-            token = RefreshToken(refresh_token)
-            token.blacklist()
-            return Response(status=status.HTTP_200_OK)
+        try:
+            refresh_token = request.data.get("refresh_token")  # Assuming you send the refresh token
+            if refresh_token:
+                token = RefreshToken(refresh_token)
+                token.blacklist()
+                return Response({"detail": "Successfully logged out."}, status=status.HTTP_205_RESET_CONTENT)
+            else:
+                # If only access token is available, attempt to blacklist it directly
+                access_token = request.headers.get('Authorization', '').split(' ')[1] if request.headers.get('Authorization') else None
+                if access_token:
+                    try:
+                        RefreshToken(access_token).blacklist() # This might not work directly, see note below
+                        return Response({"detail": "Successfully logged out."}, status=status.HTTP_205_RESET_CONTENT)
+                    except Exception as e:
+                        return Response({"detail": "Invalid token provided."}, status=status.HTTP_400_BAD_REQUEST)
+                else:
+                    return Response({"detail": "No token provided."}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
-            logger.error(f"Logout Error: {e}")
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response({"detail": "Something went wrong during logout."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class UserInfoAPIView(RetrieveAPIView):
     serializer_class = MembersSerializer
@@ -294,3 +320,30 @@ class PasswordResetConfirmView(APIView):
             serializer.save()
             return Response({"message": "Password reset successful."}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class CeoAPIView(viewsets.ModelViewSet):
+    # permission_classes = [AuthorizedAccess]
+    serializer_class = CeoSerializer
+    queryset = Ceo.objects.all()
+    @method_decorator(cache_page(15 * 60, key_prefix="ceo"))
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+    @method_decorator(cache_page(15 * 60))
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
+    def get_queryset(self):
+       
+        return super().get_queryset()
+class AboutTeamAPIView(viewsets.ModelViewSet):
+    # permission_classes = [AuthorizedAccess]
+    serializer_class = AboutTeamSerializer
+    queryset = AboutTeam.objects.all()
+    @method_decorator(cache_page(15 * 60, key_prefix="AboutTeam"))
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+    @method_decorator(cache_page(15 * 60))
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
+    def get_queryset(self):
+       
+        return super().get_queryset()

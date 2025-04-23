@@ -34,7 +34,9 @@ CSRF_TRUSTED_ORIGINS = ["https://comic-finch-strongly.ngrok-free.app", 'https://
 
 INSTALLED_APPS = [
     # 'jazzmin',
+    'django_daisy',
     'django.contrib.admin',
+    'django.contrib.humanize', 
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -65,6 +67,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
+    # 'django.contrib.humanize'
 ]
  
 ROOT_URLCONF = 'djmovies.urls'
@@ -253,5 +257,28 @@ CACHES = {
         }
     }
 }
-
+DAISY_SETTINGS = {
+    'SITE_TITLE': 'Django Admin',  # The title of the site 
+    'SITE_HEADER': 'Administration',  # Header text displayed in the admin panel
+    'INDEX_TITLE': 'Hi, welcome to your dashboard',  # The title for the index page of dashboard
+    'SITE_LOGO': '/static/admin/img/daisyui-logomark.svg',  # Path to the logo image displayed in the sidebar
+    'EXTRA_STYLES': [],  # List of extra stylesheets to be loaded in base.html (optional)
+    'EXTRA_SCRIPTS': [],  # List of extra script URLs to be loaded in base.html (optional)
+    'LOAD_FULL_STYLES': False,  # If True, loads full DaisyUI components in the admin (useful if you have custom template overrides)
+    'SHOW_CHANGELIST_FILTER': False,  # If True, the filter sidebar will open by default on changelist views
+    'DONT_SUPPORT_ME': True, # Hide github link in sidebar footer
+    'SIDEBAR_FOOTNOTE': 'Made by : movies ICI', # add footnote to sidebar
+    'APPS_REORDER': {
+        # Custom configurations for third-party apps that can't be modified directly in their `apps.py`
+        'auth': {
+            'icon': 'fa-solid fa-person-military-pointing',  # FontAwesome icon for the 'auth' app
+            'name': 'Authentication',  # Custom name for the 'auth' app
+            'hide': False,  # Whether to hide the 'auth' app from the sidebar (set to True to hide)
+            'divider_title': "Auth",  # Divider title for the 'auth' section
+        },
+        'social_django': {
+            'icon': 'fa-solid fa-users-gear',  # Custom FontAwesome icon for the 'social_django' app
+        },
+    },
+}
 

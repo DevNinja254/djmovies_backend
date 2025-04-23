@@ -6,6 +6,7 @@ from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
 from django.conf import settings
 from django.db.models.signals import post_save
+from multimedia.models import VideoUpload
 # Create your models here.
 def generate_unique_id():
     return uuid.uuid4()
@@ -99,9 +100,22 @@ class Error(models.Model):
         db_table = "errors"
 class Message(models.Model):
     message_id = models.UUIDField(default=generate_unique_id, primary_key=True)
+    name = models.CharField(max_length = 150, null=True, blank=True)
     email = models.EmailField(max_length=100, blank=False)
+    phone_number = models.IntegerField(blank=True, null=True)
     message = models.TextField()
     def __str__(self):
         return self.email 
     class Meta:
         db_table = "messages"
+class Ceo(models.Model):
+    full_name = models.CharField(max_length=200)
+    profile_image = models.ImageField(upload_to="ceo_image/")
+    title = models.TextField()
+    message = models.TextField()
+
+class AboutTeam(models.Model):
+    full_name = models.CharField(max_length=200)
+    profile_image = models.ImageField(upload_to="ceo_image/")
+    title = models.TextField()
+    message = models.TextField()

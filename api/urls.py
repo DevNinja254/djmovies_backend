@@ -17,6 +17,10 @@ route.register("message", views.MessageAPIView, basename="message")
 route.register("notification", views.NotificationAPIView, basename="notification")
 route.register("errors", views.ErrorsAPIView, basename="errors")
 route.register("genretotal", views.GenreTotalAPIView, basename="genre_total")
+route.register("dj", views.DjAPIView, basename="dj")
+route.register("ceo", views.CeoAPIView, basename="ceo")
+route.register("about_team", views.AboutTeamAPIView, basename="about_team")
+
 urlpatterns = [
     path('login/', views.UserLoginAPIView.as_view(), name='login'),
     path('register/', views.UserRegistrationAPIView.as_view(), name='register'),

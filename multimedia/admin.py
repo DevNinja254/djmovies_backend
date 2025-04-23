@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import  VideoUpload,AdditionalVideoFile, Genre, Review
+from .models import  VideoUpload,AdditionalVideoFile, Genre, Dj, Category
 # Register your models here.
 class AdditionalVideoFileInline(admin.TabularInline):  # Or use StackedInline
     model = AdditionalVideoFile
@@ -7,10 +7,10 @@ class AdditionalVideoFileInline(admin.TabularInline):  # Or use StackedInline
 
 class VideoUploadEdit(admin.ModelAdmin):
     inlines = [AdditionalVideoFileInline]
-    list_display=("title", "price", "genre", "type")
+    list_display=("title", "price", "genre", "dj")
     search_fields=("title",)
     readonly_fields = ("purchase_times", "likes", "date_uploaded")
-    list_filter = ("genre", "price", "type", "purchase_times")
+    list_filter = ("genre", "price", "dj", "purchase_times")
     ordering = ("-date_uploaded",)
 
 
@@ -28,4 +28,5 @@ class ReviewEdit(admin.ModelAdmin):
 
 admin.site.register(VideoUpload, VideoUploadEdit)
 admin.site.register(Genre, GenreEdit)
-admin.site.register(Review, ReviewEdit)
+admin.site.register(Dj)
+admin.site.register(Category)

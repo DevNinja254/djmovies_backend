@@ -73,3 +73,11 @@ class NotificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Notification
         fields = "__all__"
+class CeoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Ceo
+        fields = "__all__"
+class AboutTeamSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AboutTeam
+        fields = "__all__"
