@@ -20,6 +20,7 @@ route.register("genretotal", views.GenreTotalAPIView, basename="genre_total")
 route.register("dj", views.DjAPIView, basename="dj")
 route.register("ceo", views.CeoAPIView, basename="ceo")
 route.register("about_team", views.AboutTeamAPIView, basename="about_team")
+route.register("dj_Total", views.DjTotalAPIView, basename="dj_total")
 
 urlpatterns = [
     path('login/', views.UserLoginAPIView.as_view(), name='login'),

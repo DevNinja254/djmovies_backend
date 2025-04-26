@@ -13,13 +13,14 @@ class VideoUploadFilter(FilterSet):
     price_max = django_filters.NumberFilter(field_name='price', lookup_expr='lte')
     date_uploaded_min = django_filters.DateTimeFilter(field_name='date_uploaded', lookup_expr='gte')
     date_uploaded_max = django_filters.DateTimeFilter(field_name='date_uploaded', lookup_expr='lte')
-    popular = django_filters.BooleanFilter()
+    popular = django_filters.BooleanFilter(field_name='popular')
+    suggest = django_filters.BooleanFilter(field_name="suggest")
     genre = django_filters.CharFilter(field_name='genre', lookup_expr='exact') #filter by category name
     cartegory = django_filters.CharFilter(field_name='cartegory', lookup_expr='exact')
 
     class Meta:
         model = VideoUpload
-        fields = ['dj', 'title', 'price', 'date_uploaded', 'popular', "genre", "cartegory"]  # Add any other fields you want to filter by
+        fields = ['dj', 'title', 'price', 'date_uploaded', 'popular', "genre", "cartegory", 'suggest']  # Add any other fields you want to filter by
 
 
 

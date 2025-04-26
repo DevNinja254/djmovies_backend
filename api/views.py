@@ -30,11 +30,11 @@ class VideoDetailsAPIView(viewsets.ModelViewSet):
     filterset_class = VideoUploadFilter
     pagination_class = CustomPagination
     ordering_fields = ['title', 'price', 'date_uploaded', 'popular']
-    @method_decorator(cache_page(15 * 60, key_prefix="videosupload"))
+    @method_decorator(cache_page(15 * 60 , key_prefix="videos"))
     @method_decorator(vary_on_cookie)
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
-    @method_decorator(cache_page(60 * 5))
+    @method_decorator(cache_page(15 * 60, key_prefix="videos"))
     @method_decorator(vary_on_cookie)
     def retrieve(self, request, *args, **kwargs):
         return super().retrieve(request, *args, **kwargs)
@@ -52,6 +52,21 @@ class DjAPIView(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
     @method_decorator(cache_page(60 * 60))
+    @method_decorator(vary_on_cookie)
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
+    def get_queryset(self):
+       
+        return super().get_queryset()
+    # permission_classes = [[AuthorizedAccess]
+class DjTotalAPIView(viewsets.ModelViewSet):
+    serializer_class = DjTotalSerializer
+    queryset = Dj.objects.all()
+    @method_decorator(cache_page(15 * 60, key_prefix="dj"))
+    @method_decorator(vary_on_cookie)
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+    @method_decorator(cache_page(15 * 60))
     @method_decorator(vary_on_cookie)
     def retrieve(self, request, *args, **kwargs):
         return super().retrieve(request, *args, **kwargs)

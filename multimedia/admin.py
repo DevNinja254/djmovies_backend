@@ -7,7 +7,8 @@ class AdditionalVideoFileInline(admin.TabularInline):  # Or use StackedInline
 
 class VideoUploadEdit(admin.ModelAdmin):
     inlines = [AdditionalVideoFileInline]
-    list_display=("title", "price", "genre", "dj")
+    list_display=("title", "price", "genre", "dj", 'suggest', "popular")
+    list_editable = ('price', 'suggest', "popular")
     search_fields=("title",)
     readonly_fields = ("purchase_times", "likes", "date_uploaded")
     list_filter = ("genre", "price", "dj", "purchase_times")
